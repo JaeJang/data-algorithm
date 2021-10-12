@@ -1,4 +1,5 @@
 class Solution:
+    # 99% faster
     def lengthOfLongestSubstring(self, s: str) -> int:
         current = ''
         maxCount = 0 
@@ -22,3 +23,22 @@ class Solution:
             return maxCount
         else:
             return len(current)
+
+
+    # less performance but cleaner
+    # sliding window
+    def lengthOfLongestSubstringV2(self, s: str) -> int:
+        l = maxCount = 0
+        usedChar = {}
+        
+        for r, c in enumerate(s):
+            if c not in usedChar:
+                
+                maxCount = max(maxCount, r - l + 1)
+            else:
+                if l <= usedChar[c]:
+                    l = usedChar[c] + 1
+                else:
+                    maxCount = max(maxCount, r - l + 1)
+            usedChar[c] = r
+        return maxCount
