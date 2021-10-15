@@ -4,15 +4,13 @@ class Solution:
         if numRows == 1:
             return s
 
-        rows = []
-        for i in range(numRows):
-            rows.append([])
+        rows = [''] * numRows
             
         currentRowIndex = 0
         zeroModValue = numRows + (numRows - 2)
 
         for i, c in enumerate(s):
-            rows[currentRowIndex].append(c)
+            rows[currentRowIndex] += c
             if i % zeroModValue == 0:
                 currentRowIndex += 1
             elif i % zeroModValue < zeroModValue // 2:
@@ -20,11 +18,29 @@ class Solution:
             elif i % zeroModValue >= zeroModValue // 2:
                 currentRowIndex -= 1
 
-        result = ''
-        for row in rows:
-            result += ''.join(row)
+        return ''.join(rows)
+    
+    # way simpler
+    def convertV2(self, s: str, numRows: int) -> str:
+        
+        if numRows == 1:
+            return s
+
+        rows = [''] * numRows
             
-        return result
+        currentRowIndex = 0
+        step = 1
+
+        for c in s:
+            rows[currentRowIndex] += c
+            if currentRowIndex == 0:
+                step = 1
+            elif currentRowIndex == numRows - 1:
+                step = -1
+            
+            currentRowIndex += step
+
+        return ''.join(rows)
                 
         
 """
