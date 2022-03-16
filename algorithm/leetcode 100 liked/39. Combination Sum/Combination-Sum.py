@@ -5,7 +5,18 @@ class Solution:
 
         self.helper(candidates, 0, target, [], result)
         
+        self.helperV2(candidates, target, [], result)
+        
         return result;
+
+    def helperV2(self, nums, target, currentCom, result):
+        if target < 0:
+            return;
+        if target == 0:
+            result.append(currentCom);
+            return;
+        for i in range(len(nums)):
+            self.helper(nums[i:], target - nums[i], currentCom + [nums[i]], result)
     
     def helper(self, candidates, index, target, currentCom, result):
         sum = 0;
