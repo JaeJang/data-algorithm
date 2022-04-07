@@ -8,6 +8,11 @@ Log {
 }
 */
 
+const ACTION  = Object.freeze({
+    OUT: 'out',
+    IN: 'in'
+})
+
 const logs = [
     {id: 1, user: "Jae", file: "f1", action: "out", time: 1},
     {id: 2, user: "Jae", file: "f1", action: "in", time: 10},
@@ -24,24 +29,24 @@ const logs = [
 ];
 
 function fileUsedMost() {
-    const outLogs = logs.filter(log => log.action === 'out');
-
-    const fileMap = {}
-    
-    let keys = [];
+    const fileMap = {};
+    let maxFiles = [];
     let max = -1;
     // we can finish it in one pass
-    for (let log of outLogs) {
-        fileMap[log.file] = fileMap[log.file] ? fileMap[log.file] + 1 : 1;
-        if (max < fileMap[log.file]) {
-            keys = [log.file];
-            max = fileMap[log.file]
-            
-        } else if(max === fileMap[log.file]) {
-            keys.push(log.file);
-        }
-    }
-    return keys;
+    logs
+        .filter(log => log.action === ACTION.OUT)
+        .map(log => {
+            fileMap[log.file] = fileMap[log.file] ? fileMap[log.file] + 1 : 1;
+            if (max < fileMap[log.file]) {
+                maxFiles = [log.file];
+                max = fileMap[log.file];
+                
+            } else if(max === fileMap[log.file]) {
+                maxFiles.push(log.file);
+            }
+        });
+
+    return maxFiles;
 }
 // f 1 -> {f1: 1} -> keys:[f1], max:1
 // f 2 -> {f1: 1, f2:1} -> keys:[f1,f2], max:1
@@ -62,29 +67,27 @@ mostUserUsed function has the same logic as fileUsedMost
 function longestUsedUser() {
     // {file: outTime}
     const outTimes = {}
-    // {user: longestTimeForUser}
-    const users = {}
     let longestTime = 0;
-    let longestUser = null;
-    let longestUsedFile = null;
+    let longestLogIndex = -1;
 
-    for (let log of logs) {
-        if (log.action === 'out') {
+    logs.map((log, index) => {
+        if (log.action === ACTION.OUT) {
             outTimes[log.file] = log.time;
         } else {
+            // when the action is in, there must be corresponding out log in outTimes
             const usedTime = log.time - outTimes[log.file];
-            if(!users[log.user]) users[log.user] = usedTime;
-            else users[log.user] = Math.max(usedTime, users[log.user]);
-            
             if (longestTime < usedTime) {
                 longestTime = usedTime;
-                longestUser = log.user;
-                longestUsedFile = log.file;
+                longestLogIndex = index;
             }
         }
-    }
+    });
 
-    return {file: longestUsedFile, user: longestUser, time: longestTime};
+    return {
+        file: logs[longestLogIndex].file,
+        user: logs[longestLogIndex].user,
+        time: longestTime
+    };
 }
 
 console.log(longestUsedUser());
