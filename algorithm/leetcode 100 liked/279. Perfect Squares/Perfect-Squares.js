@@ -11,6 +11,7 @@
     }
     let level = 0;
     let queue = [0];
+    const seen = new Set();
     while (queue.length) {
         ++level;
         let tmp = [];
@@ -18,7 +19,10 @@
             const cur = queue.shift();
             for (let num of numsToUse) {
                 if (num + cur === n) return level;
-                if (num + cur < n && num >= cur) tmp.push(num+cur);
+                if (num + cur < n && num >= cur && !seen.has(num+cur)){
+                    tmp.push(num+cur);
+                    seen.add(num+cur)
+                } 
             }
         }
         queue = tmp;
@@ -29,13 +33,13 @@
 
 /*
 n = 12
-                0
+                0       - 0
              /  |  \
-            1   4   9
-          / | \   \    \
-        5   9  10   8    10
-      / |   |  |    |
-    6   9  10  11   12
+            1   4   9   - 1
+          /   \   \    
+        5     10   8    - 2
+               |   |
+               11  12   - 3
 
 
 */
