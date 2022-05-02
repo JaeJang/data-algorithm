@@ -2,6 +2,26 @@
  * @param {number} n
  * @return {number}
  */
+ var numSquaresV2 = function(n) {
+    const dp = Array(n + 1).fill(n);
+    dp[0] = 0;
+    const numToUse = [];
+    
+    for (let i = 1; i <= parseInt(Math.sqrt(n)); ++i) {
+        numToUse.push(i * i);
+    }
+    
+    for (let i = 1; i <= n; ++i) {
+        for (let j = 0; j < numToUse.length; ++j) {
+            if (i >= numToUse[j]) {
+                dp[i] = Math.min(dp[i], 1 + dp[i - numToUse[j]])
+            } else break;
+            
+        }
+    }
+    return dp[n];
+};
+
  var numSquares = function(n) {
     const numsToUse = [];
     let currentNum = 1;
