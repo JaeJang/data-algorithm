@@ -2,6 +2,24 @@
  * @param {number[]} nums
  * @return {void} Do not return anything, modify nums in-place instead.
  */
+ var sortColorsV2 = function(nums) {
+  let red = 0;
+  let blue = nums.length - 1;
+  let i = 0;
+  while (red < blue && i <= blue) {
+      if (nums[i] === 0) {
+          nums[i] = nums[red];
+          nums[red++] = 0;
+          ++i;
+      } else if (nums[i] === 2) {
+          nums[i] = nums[blue];
+          nums[blue--] = 2;
+          --i;
+      }
+      ++i;
+  }
+};
+
  var sortColors = function(nums) {
     let whiteStart =  0;
     
